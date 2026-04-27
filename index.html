@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DAUTTIR</title>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0c0b;
+      --surface: #151412;
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.22);
+      --text: #f0ece4;
+      --muted: rgba(240,236,228,0.45);
+      --accent: #c8b99a;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      font-family: 'Helvetica Neue', 'Arial Narrow', Arial, sans-serif;
+      font-stretch: condensed;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 4rem 1.5rem 5rem;
+      min-height: 100vh;
+    }
+
+    /* subtle noise texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      background-size: 200px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .links, .contact-wrap {
+      width: 100%;
+    }
+
+    /* header */
+    .header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    .wordmark {
+      font-family: 'Helvetica Neue', 'Arial Narrow', Arial, sans-serif;
+      font-stretch: condensed;
+      font-weight: 300;
+      font-size: clamp(1.3rem, 4vw, 1.7rem);
+      letter-spacing: 0.02em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 0.6rem;
+    }
+
+    .tagline {
+      font-size: 10px;
+      font-weight: 200;
+      letter-spacing: 0.35em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* divider */
+    .rule { display: none; }
+
+    /* links */
+    .links {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .link-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 24px;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 3px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.25s, background 0.25s;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .link-item:hover {
+      border-color: var(--border-hover);
+      background: #1c1a17;
+    }
+
+    .link-item:nth-child(1) { animation-delay: 0.28s; }
+    .link-item:nth-child(2) { animation-delay: 0.38s; }
+    .link-item:nth-child(3) { animation-delay: 0.48s; }
+    .link-item:nth-child(4) { animation-delay: 0.58s; }
+
+    .link-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .link-label {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.25em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .link-url {
+      font-family: 'Helvetica Neue', 'Arial Narrow', Arial, sans-serif;
+      font-stretch: condensed;
+      font-weight: 400;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .link-arrow {
+      font-size: 18px;
+      color: var(--muted);
+      transition: color 0.2s, transform 0.2s;
+      font-family: serif;
+    }
+
+    .link-item:hover .link-arrow {
+      color: var(--accent);
+      transform: translateX(3px);
+    }
+
+    /* contact */
+    .contact-wrap {
+      width: 100%;
+      margin-top: 14px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.68s ease forwards;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 24px;
+      border: 0.5px solid var(--border);
+      border-radius: 3px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 200;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.25s, border-color 0.25s;
+    }
+
+    .contact-link:hover {
+      color: var(--text);
+      border-color: var(--border-hover);
+    }
+
+    .contact-icon {
+      width: 14px;
+      height: 14px;
+      opacity: 0.5;
+    }
+
+    .contact-label {
+      color: #9ee4d4;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+    }
+
+    .contact-divider {
+      color: rgba(255,255,255,0.15);
+      font-weight: 200;
+      margin: 0 2px;
+    }
+
+    /* footer */
+    .footer {
+      margin-top: 3.5rem;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: rgba(240,236,228,0.2);
+      text-transform: uppercase;
+      text-align: center;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.85s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 3.5rem 1.25rem 4rem; }
+
+      .wordmark { font-size: 1.4rem; }
+
+      .tagline { font-size: 9px; letter-spacing: 0.2em; }
+
+      .link-item { padding: 16px 18px; }
+
+      .link-label { font-size: 9px; }
+
+      .link-url { font-size: 12px; }
+
+      .contact-link { padding: 14px 18px; font-size: 10px; gap: 7px; }
+
+      .footer { margin-top: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="header">
+      <div class="wordmark">DAUTTIR</div>
+      <p class="tagline">Based in Seoul,<br>South Korea</p>
+    </div>
+
+    <div class="rule"></div>
+
+    <div class="links">
+      <a class="link-item" href="https://dauttir.com" target="_blank" rel="noopener">
+        <div class="link-left">
+          <span class="link-label">Official</span>
+          <span class="link-url">dauttir.com</span>
+        </div>
+      </a>
+
+      <a class="link-item" href="https://en.dauttir.com" target="_blank" rel="noopener">
+        <div class="link-left">
+          <span class="link-label">Global</span>
+          <span class="link-url">en.dauttir.com</span>
+        </div>
+      </a>
+
+      <a class="link-item" href="https://jp.dauttir.com" target="_blank" rel="noopener">
+        <div class="link-left">
+          <span class="link-label">Japan</span>
+          <span class="link-url">jp.dauttir.com</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="contact-wrap">
+      <a class="contact-link" href="mailto:hello@dauttir.com">
+        <span class="contact-label">CONTACT</span>
+        <span class="contact-divider">|</span>
+        hello@dauttir.com
+      </a>
+    </div>
+
+    <p class="footer">© 2025 Dauttir</p>
+
+  </div>
+</body>
+</html>
